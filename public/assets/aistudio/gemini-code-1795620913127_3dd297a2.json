@@ -1,0 +1,450 @@
+[
+  {
+    "listing_id": "DMV-001",
+    "mls_status": "Active",
+    "days_on_market": 18,
+    "list_price": 315000,
+    "price_per_sqft": 508,
+    "address": {
+      "street": "1725 New Hampshire Ave NW, Apt 404",
+      "neighborhood": "Dupont Circle",
+      "city": "Washington",
+      "state": "DC",
+      "zip_code": "20009",
+      "jurisdiction": "District of Columbia"
+    },
+    "property_details": {
+      "property_type": "Co-op",
+      "architectural_style": "Pre-War Beaux-Arts",
+      "year_built": 1928,
+      "bedrooms": 1,
+      "bathrooms_full": 1,
+      "bathrooms_half": 0,
+      "living_area_sqft": 620,
+      "lot_size_sqft": null,
+      "stories": 1,
+      "basement": "None"
+    },
+    "financials_and_hoa": {
+      "has_hoa": true,
+      "fee_type": "Co-op Underlying Mortgage + Condo Fee",
+      "monthly_fee": 685,
+      "fee_includes": ["Property Taxes", "Water", "Gas", "Heat", "Trash", "Building Maintenance"],
+      "estimated_annual_property_tax": 0,
+      "first_time_buyer_notes": "Underlying mortgage and property taxes are bundled into the monthly co-op fee. Typically requires 10-20% down and board interview."
+    },
+    "interior_features": {
+      "flooring": ["Original Hardwood", "Ceramic Tile"],
+      "appliances": ["Gas Range", "Refrigerator", "Dishwasher"],
+      "laundry": "Common Building Laundry",
+      "heating_cooling": ["Radiator Heat", "Window AC"],
+      "highlights": ["9-foot ceilings", "Walk-in closet", "South-facing windows"]
+    },
+    "exterior_and_parking": {
+      "parking_type": "Street Permit Only",
+      "garage_spaces": 0,
+      "outdoor_space": "Shared Roof Deck",
+      "construction_materials": ["Brick", "Limestone"]
+    },
+    "location_and_transit": {
+      "nearest_metro_station": "Dupont Circle (Red Line)",
+      "distance_to_metro_miles": 0.3,
+      "walk_score": 98,
+      "transit_score": 91,
+      "school_district": "DC Public Schools (DCPS)"
+    },
+    "description": "Sunlit pre-war co-op steps from Dupont Circle Metro. Monthly fee covers property taxes, heat, water, and building upkeep, simplifying monthly budgeting for urban first-time buyers."
+  },
+  {
+    "listing_id": "DMV-002",
+    "mls_status": "Active",
+    "days_on_market": 9,
+    "list_price": 645000,
+    "price_per_sqft": 419,
+    "address": {
+      "street": "4118 8th St NW",
+      "neighborhood": "Petworth",
+      "city": "Washington",
+      "state": "DC",
+      "zip_code": "20011",
+      "jurisdiction": "District of Columbia"
+    },
+    "property_details": {
+      "property_type": "Townhouse / Rowhouse",
+      "architectural_style": "Porch-Front Wardman Rowhouse",
+      "year_built": 1924,
+      "bedrooms": 3,
+      "bathrooms_full": 2,
+      "bathrooms_half": 1,
+      "living_area_sqft": 1540,
+      "lot_size_sqft": 1650,
+      "stories": 3,
+      "basement": "Finished Walk-Out English Basement (Unpermitted Kitchenette)"
+    },
+    "financials_and_hoa": {
+      "has_hoa": false,
+      "fee_type": null,
+      "monthly_fee": 0,
+      "fee_includes": [],
+      "estimated_annual_property_tax": 4420,
+      "first_time_buyer_notes": "Eligible for DC Homestead Deduction. English basement with separate rear entrance offers future rental income potential."
+    },
+    "interior_features": {
+      "flooring": ["Oak Hardwood", "Luxury Vinyl Plank"],
+      "appliances": ["Stainless Gas Range", "Dishwasher", "Microwave", "Washer/Dryer"],
+      "laundry": "In-Unit (Lower Level)",
+      "heating_cooling": ["Central Forced Air", "Central AC"],
+      "highlights": ["Exposed brick accent wall", "Updated quartz kitchen", "Separate basement entrance"]
+    },
+    "exterior_and_parking": {
+      "parking_type": "Rear Parking Pad (1 Space)",
+      "garage_spaces": 0,
+      "outdoor_space": "Covered Front Porch, Fenced Rear Patio",
+      "construction_materials": ["Brick"]
+    },
+    "location_and_transit": {
+      "nearest_metro_station": "Georgia Ave-Petworth (Green/Yellow Lines)",
+      "distance_to_metro_miles": 0.5,
+      "walk_score": 89,
+      "transit_score": 78,
+      "school_district": "DC Public Schools (DCPS)"
+    },
+    "description": "Classic Petworth brick rowhouse with zero HOA fees, off-street alley parking, and a finished English basement ideal for roommates or future rental offset."
+  },
+  {
+    "listing_id": "DMV-003",
+    "mls_status": "Active",
+    "days_on_market": 14,
+    "list_price": 535000,
+    "price_per_sqft": 318,
+    "address": {
+      "street": "9812 Brookview Rd",
+      "neighborhood": "Woodside Park / Four Corners",
+      "city": "Silver Spring",
+      "state": "MD",
+      "zip_code": "20901",
+      "jurisdiction": "Montgomery County"
+    },
+    "property_details": {
+      "property_type": "Single-Family Detached",
+      "architectural_style": "Mid-Century Rambler",
+      "year_built": 1956,
+      "bedrooms": 3,
+      "bathrooms_full": 2,
+      "bathrooms_half": 0,
+      "living_area_sqft": 1680,
+      "lot_size_sqft": 6800,
+      "stories": 1,
+      "basement": "Full Finished Daylight Walk-Out"
+    },
+    "financials_and_hoa": {
+      "has_hoa": false,
+      "fee_type": null,
+      "monthly_fee": 0,
+      "fee_includes": [],
+      "estimated_annual_property_tax": 5610,
+      "first_time_buyer_notes": "No HOA restrictions. Maryland first-time buyers may qualify for state transfer tax exemption."
+    },
+    "interior_features": {
+      "flooring": ["Refinished Hardwood", "Carpet (Basement)"],
+      "appliances": ["Electric Range", "Refrigerator", "Dishwasher", "Washer/Dryer"],
+      "laundry": "Basement Utility Room",
+      "heating_cooling": ["Natural Gas Furnace", "Central AC"],
+      "highlights": ["Wood-burning fireplace", "Main-level primary bedroom", "Lower-level rec room"]
+    },
+    "exterior_and_parking": {
+      "parking_type": "Driveway (2 Cars)",
+      "garage_spaces": 0,
+      "outdoor_space": "Fenced Backyard, Concrete Patio",
+      "construction_materials": ["Brick", "Vinyl Siding"]
+    },
+    "location_and_transit": {
+      "nearest_metro_station": "Forest Glen (Red Line)",
+      "distance_to_metro_miles": 1.1,
+      "walk_score": 58,
+      "transit_score": 54,
+      "school_district": "Montgomery County Public Schools (MCPS)"
+    },
+    "description": "Well-maintained brick Rambler featuring main-level living and a daylight lower level that nearly doubles the living footprint, set on a flat fenced yard near I-495 and Sligo Creek trails."
+  },
+  {
+    "listing_id": "DMV-004",
+    "mls_status": "Pending",
+    "days_on_market": 6,
+    "list_price": 415000,
+    "price_per_sqft": 292,
+    "address": {
+      "street": "4319 Gallatin St",
+      "neighborhood": "Arts District",
+      "city": "Hyattsville",
+      "state": "MD",
+      "zip_code": "20781",
+      "jurisdiction": "Prince George's County"
+    },
+    "property_details": {
+      "property_type": "Townhouse (Interior)",
+      "architectural_style": "Colonial Brick Townhome",
+      "year_built": 2008,
+      "bedrooms": 3,
+      "bathrooms_full": 2,
+      "bathrooms_half": 1,
+      "living_area_sqft": 1420,
+      "lot_size_sqft": 1350,
+      "stories": 3,
+      "basement": "None (Slab-on-Grade Garage Level)"
+    },
+    "financials_and_hoa": {
+      "has_hoa": true,
+      "fee_type": "HOA",
+      "monthly_fee": 95,
+      "fee_includes": ["Common Area Maintenance", "Snow Removal", "Trash"],
+      "estimated_annual_property_tax": 4890,
+      "first_time_buyer_notes": "Low monthly HOA fee keeps debt-to-income ratio manageable while offering newer 2000s construction systems."
+    },
+    "interior_features": {
+      "flooring": ["Engineered Hardwood", "Carpet"],
+      "appliances": ["Gas Stove", "Microwave", "Dishwasher", "Stacked Washer/Dryer"],
+      "laundry": "Upper Hallway Closet",
+      "heating_cooling": ["Heat Pump", "Central AC"],
+      "highlights": ["Open-concept main level", "Granite island kitchen", "Primary suite with double vanity"]
+    },
+    "exterior_and_parking": {
+      "parking_type": "Attached Rear-Load Garage + Driveway",
+      "garage_spaces": 1,
+      "outdoor_space": "Composite Rear Deck",
+      "construction_materials": ["Brick Front", "Vinyl Siding"]
+    },
+    "location_and_transit": {
+      "nearest_metro_station": "Hyattsville Crossing (Green Line)",
+      "distance_to_metro_miles": 0.9,
+      "walk_score": 81,
+      "transit_score": 62,
+      "school_district": "Prince George's County Public Schools (PGCPS)"
+    },
+    "description": "Modern three-level townhome walkable to Hyattsville Arts District shops and restaurants, complete with an attached garage and low HOA dues."
+  },
+  {
+    "listing_id": "DMV-005",
+    "mls_status": "Active",
+    "days_on_market": 21,
+    "list_price": 460000,
+    "price_per_sqft": 590,
+    "address": {
+      "street": "850 N Randolph St, Unit 712",
+      "neighborhood": "Ballston",
+      "city": "Arlington",
+      "state": "VA",
+      "zip_code": "22203",
+      "jurisdiction": "Arlington County"
+    },
+    "property_details": {
+      "property_type": "Condo",
+      "architectural_style": "Contemporary High-Rise",
+      "year_built": 2005,
+      "bedrooms": 1,
+      "bathrooms_full": 1,
+      "bathrooms_half": 0,
+      "living_area_sqft": 780,
+      "lot_size_sqft": null,
+      "stories": 1,
+      "basement": "None"
+    },
+    "financials_and_hoa": {
+      "has_hoa": true,
+      "fee_type": "Condo Association",
+      "monthly_fee": 540,
+      "fee_includes": ["Water", "Trash", "Concierge", "Fitness Center", "Rooftop Pool", "Master Insurance"],
+      "estimated_annual_property_tax": 4690,
+      "first_time_buyer_notes": "Verify building owner-occupancy ratio for FHA/VA loan eligibility. High condo fee reduces maximum loan qualification amount."
+    },
+    "interior_features": {
+      "flooring": ["Bamboo Hardwood", "Porcelain Tile"],
+      "appliances": ["Stainless Electric Range", "Refrigerator", "Dishwasher", "In-Unit Washer/Dryer"],
+      "laundry": "In-Unit",
+      "heating_cooling": ["Electric Heat Pump", "Central AC"],
+      "highlights": ["Floor-to-ceiling windows", "Juliet balcony", "Dedicated study nook"]
+    },
+    "exterior_and_parking": {
+      "parking_type": "Assigned Underground Garage Space",
+      "garage_spaces": 1,
+      "outdoor_space": "Building Courtyard & Rooftop Pool",
+      "construction_materials": ["Concrete", "Glass", "Brick"]
+    },
+    "location_and_transit": {
+      "nearest_metro_station": "Ballston-MU (Orange/Silver Lines)",
+      "distance_to_metro_miles": 0.2,
+      "walk_score": 95,
+      "transit_score": 82,
+      "school_district": "Arlington Public Schools (APS)"
+    },
+    "description": "Turnkey commuter condo two blocks from Ballston Metro with deeded garage parking, concierge service, and zero exterior maintenance responsibilities."
+  },
+  {
+    "listing_id": "DMV-006",
+    "mls_status": "Active",
+    "days_on_market": 11,
+    "list_price": 565000,
+    "price_per_sqft": 323,
+    "address": {
+      "street": "6514 Beacon Hill Ct",
+      "neighborhood": "Groveton / Beacon Hill",
+      "city": "Alexandria",
+      "state": "VA",
+      "zip_code": "22306",
+      "jurisdiction": "Fairfax County"
+    },
+    "property_details": {
+      "property_type": "Townhouse (End-Unit)",
+      "architectural_style": "Traditional Colonial",
+      "year_built": 1986,
+      "bedrooms": 3,
+      "bathrooms_full": 2,
+      "bathrooms_half": 1,
+      "living_area_sqft": 1750,
+      "lot_size_sqft": 2100,
+      "stories": 3,
+      "basement": "Finished Walk-Out Basement"
+    },
+    "financials_and_hoa": {
+      "has_hoa": true,
+      "fee_type": "HOA",
+      "monthly_fee": 135,
+      "fee_includes": ["Common Grounds", "Trash/Recycling", "Playground", "Reserved Parking Maintenance"],
+      "estimated_annual_property_tax": 6320,
+      "first_time_buyer_notes": "End-unit lot provides extra side windows and yard space; Fairfax County offers lower property tax rates than neighboring DC/MD suburbs."
+    },
+    "interior_features": {
+      "flooring": ["Hardwood (Main)", "Carpet (Upper/Lower)"],
+      "appliances": ["Electric Range", "Refrigerator", "Dishwasher", "Washer/Dryer"],
+      "laundry": "Lower Level Utility Room",
+      "heating_cooling": ["Electric Heat Pump", "Central AC"],
+      "highlights": ["Bay window in eat-in kitchen", "Recessed lighting", "Walk-out rec room with fireplace"]
+    },
+    "exterior_and_parking": {
+      "parking_type": "2 Assigned Surface Spaces",
+      "garage_spaces": 0,
+      "outdoor_space": "Fenced Rear Yard, Wood Deck",
+      "construction_materials": ["Brick", "Vinyl Siding"]
+    },
+    "location_and_transit": {
+      "nearest_metro_station": "Huntington (Yellow Line)",
+      "distance_to_metro_miles": 1.6,
+      "walk_score": 52,
+      "transit_score": 49,
+      "school_district": "Fairfax County Public Schools (FCPS)"
+    },
+    "description": "Spacious end-unit brick-front townhome just south of Old Town Alexandria and the Capital Beltway, offering three finished levels and quick access to Route 1 and Huntington Metro."
+  },
+  {
+    "listing_id": "DMV-007",
+    "mls_status": "Active",
+    "days_on_market": 27,
+    "list_price": 349000,
+    "price_per_sqft": 336,
+    "address": {
+      "street": "11640 North Shore Dr, Unit 21B",
+      "neighborhood": "Lake Anne / Reston",
+      "city": "Reston",
+      "state": "VA",
+      "zip_code": "20190",
+      "jurisdiction": "Fairfax County"
+    },
+    "property_details": {
+      "property_type": "Condo",
+      "architectural_style": "Garden-Style Low-Rise",
+      "year_built": 1979,
+      "bedrooms": 2,
+      "bathrooms_full": 2,
+      "bathrooms_half": 0,
+      "living_area_sqft": 1040,
+      "lot_size_sqft": null,
+      "stories": 1,
+      "basement": "None"
+    },
+    "financials_and_hoa": {
+      "has_hoa": true,
+      "fee_type": "Condo Fee + Annual Reston Association Assessment",
+      "monthly_fee": 410,
+      "fee_includes": ["Water", "Sewer", "Trash", "Exterior Maintenance", "15 Community Pools", "55 Miles of Trails"],
+      "estimated_annual_property_tax": 3910,
+      "first_time_buyer_notes": "Includes Reston Association master HOA privileges; two full bathrooms make it ideal for splitting housing costs with a roommate."
+    },
+    "interior_features": {
+      "flooring": ["Laminate Wood", "Ceramic Tile"],
+      "appliances": ["Electric Range", "Dishwasher", "Refrigerator", "Washer/Dryer"],
+      "laundry": "In-Unit",
+      "heating_cooling": ["Central Electric", "Central AC"],
+      "highlights": ["Wood-burning fireplace", "Split-bedroom layout", "Sliding glass door to balcony"]
+    },
+    "exterior_and_parking": {
+      "parking_type": "Unassigned Community Lot (2 Permits)",
+      "garage_spaces": 0,
+      "outdoor_space": "Private Covered Balcony",
+      "construction_materials": ["Brick", "Cedar Siding"]
+    },
+    "location_and_transit": {
+      "nearest_metro_station": "Reston Town Center (Silver Line)",
+      "distance_to_metro_miles": 1.4,
+      "walk_score": 64,
+      "transit_score": 48,
+      "school_district": "Fairfax County Public Schools (FCPS)"
+    },
+    "description": "Budget-friendly 2-bedroom, 2-bath garden condo nestled along Reston's wooded trail network, providing Silver Line access to Tysons and Dulles Airport."
+  },
+  {
+    "listing_id": "DMV-008",
+    "mls_status": "Active",
+    "days_on_market": 15,
+    "list_price": 445000,
+    "price_per_sqft": 245,
+    "address": {
+      "street": "12408 Tulip Grove Dr",
+      "neighborhood": "Tulip Grove / Levitt Bowie",
+      "city": "Bowie",
+      "state": "MD",
+      "zip_code": "20715",
+      "jurisdiction": "Prince George's County"
+    },
+    "property_details": {
+      "property_type": "Single-Family Detached",
+      "architectural_style": "Expanded Cape Cod",
+      "year_built": 1964,
+      "bedrooms": 4,
+      "bathrooms_full": 2,
+      "bathrooms_half": 0,
+      "living_area_sqft": 1820,
+      "lot_size_sqft": 8900,
+      "stories": 1.5,
+      "basement": "None (Slab Foundation)"
+    },
+    "financials_and_hoa": {
+      "has_hoa": false,
+      "fee_type": null,
+      "monthly_fee": 0,
+      "fee_includes": [],
+      "estimated_annual_property_tax": 5340,
+      "first_time_buyer_notes": "High square-footage-to-price ratio for detached single-family living; budget for potential roof/HVAC reserves given 1960s construction."
+    },
+    "interior_features": {
+      "flooring": ["Luxury Vinyl Plank", "Carpet"],
+      "appliances": ["Electric Range", "Refrigerator", "Dishwasher", "Washer/Dryer"],
+      "laundry": "Main-Level Utility Closet",
+      "heating_cooling": ["Forced Air Gas", "Central AC"],
+      "highlights": ["2 main-level bedrooms + 2 dormer bedrooms", "Converted garage bonus room", "Updated electrical panel"]
+    },
+    "exterior_and_parking": {
+      "parking_type": "Private Driveway (3 Cars)",
+      "garage_spaces": 0,
+      "outdoor_space": "Large Fenced Backyard, Storage Shed",
+      "construction_materials": ["Aluminum/Vinyl Siding", "Asphalt Shingle Roof"]
+    },
+    "location_and_transit": {
+      "nearest_metro_station": "New Carrollton (Orange Line / MARC / Amtrak)",
+      "distance_to_metro_miles": 6.8,
+      "walk_score": 38,
+      "transit_score": 35,
+      "school_district": "Prince George's County Public Schools (PGCPS)"
+    },
+    "description": "Detached 4-bedroom Levitt-built Cape Cod offering a spacious yard, no HOA, and easy commuter access to Route 50, Annapolis, and New Carrollton MARC/Metro."
+  }
+]

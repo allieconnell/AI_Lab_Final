@@ -1,0 +1,6 @@
+{
+  "name": "Potomac Folio",
+  "description": "A simple, architectural homebuying survey and visual preference guide for DC, Maryland, and Virginia residents with personalized monthly cost breakdowns, DMV & HUD assistance matches, and ready-to-use Zillow and Redfin search kits.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
