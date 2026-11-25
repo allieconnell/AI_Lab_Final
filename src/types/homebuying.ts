@@ -184,4 +184,4 @@ export interface PreferenceSummary {
   suggestedKeywords: string[];
 }
 
-export type AppView = 'survey' | 'explore' | 'search-kit' | 'guides';
+export type AppView = 'welcome' | 'survey' | 'explore' | 'search-kit' | 'guides';

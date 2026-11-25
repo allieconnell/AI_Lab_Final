@@ -3,10 +3,11 @@ import { DMVGuidesView } from './components/DMVGuidesView';
 import { ExploreDeck } from './components/ExploreDeck';
 import { SearchKitView } from './components/SearchKitView';
 import { SurveyFlow } from './components/SurveyFlow';
+import { WelcomeView } from './components/WelcomeView';
 import { DEFAULT_SURVEY_ANSWERS, loadDMVHomeBank } from './data/dmvData';
 import { AppView, HomeCandidate, HomeRating, SurveyAnswers } from './types/homebuying';
 
-const STORAGE_KEY = 'potomac_folio_state_v1';
+const STORAGE_KEY = 'potomac_folio_state_v2';
 
 interface SavedState {
   answers: SurveyAnswers;
@@ -37,7 +38,7 @@ export default function App() {
     initial?.hasCompletedSurvey || false
   );
   const [ratings, setRatings] = useState<HomeRating[]>(initial?.ratings || []);
-  const [view, setView] = useState<AppView>(initial?.view || 'survey');
+  const [view, setView] = useState<AppView>(initial?.view || 'welcome');
 
   useEffect(() => {
     let active = true;
@@ -116,7 +117,7 @@ export default function App() {
     setSurveyStep(1);
     setHasCompletedSurvey(false);
     setRatings([]);
-    setView('survey');
+    setView('welcome');
     try {
       localStorage.removeItem(STORAGE_KEY);
     } catch {
@@ -131,15 +132,15 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F7F4EE] text-[#1E242B]">
+    <div className="min-h-screen flex flex-col bg-[#FBF8F4] text-[#1B1633]">
       {/* Strict 3-Zone Top Bar */}
-      <header className="border-b border-[#DCD5C7] bg-[#FCFBF8]">
+      <header className="border-b border-[#CFC9DB] bg-[#FFFFFF]">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between gap-8">
           {/* Zone 1: Single-element brand wordmark */}
           <button
             type="button"
-            onClick={() => navigateTo('survey')}
-            className="font-serif text-xl md:text-2xl font-semibold tracking-tight text-[#1E242B] whitespace-nowrap shrink-0"
+            onClick={() => navigateTo('welcome')}
+            className="font-display text-xl md:text-2xl font-bold tracking-tight text-[#3A2B6D] whitespace-nowrap shrink-0"
           >
             Potomac Folio
           </button>
@@ -147,15 +148,15 @@ export default function App() {
           {/* Zone 2: 4 concise single-line navigation links */}
           <nav
             aria-label="Primary navigation"
-            className="hidden md:flex items-center gap-7 text-sm font-medium text-[#524E49]"
+            className="hidden md:flex items-center gap-7 text-sm font-semibold text-[#3E3757]"
           >
             <button
               type="button"
               onClick={() => navigateTo('survey')}
               className={`py-1 transition-colors whitespace-nowrap shrink-0 border-b-2 ${
                 view === 'survey'
-                  ? 'border-[#9E3B26] text-[#1E242B] font-semibold'
-                  : 'border-transparent hover:text-[#1E242B]'
+                  ? 'border-[#CE4C6D] text-[#3A2B6D]'
+                  : 'border-transparent hover:text-[#3A2B6D]'
               }`}
             >
               Survey
@@ -165,8 +166,8 @@ export default function App() {
               onClick={() => navigateTo('explore')}
               className={`py-1 transition-colors whitespace-nowrap shrink-0 border-b-2 ${
                 view === 'explore'
-                  ? 'border-[#9E3B26] text-[#1E242B] font-semibold'
-                  : 'border-transparent hover:text-[#1E242B]'
+                  ? 'border-[#CE4C6D] text-[#3A2B6D]'
+                  : 'border-transparent hover:text-[#3A2B6D]'
               }`}
             >
               Explore Homes
@@ -176,8 +177,8 @@ export default function App() {
               onClick={() => navigateTo('search-kit')}
               className={`py-1 transition-colors whitespace-nowrap shrink-0 border-b-2 ${
                 view === 'search-kit'
-                  ? 'border-[#9E3B26] text-[#1E242B] font-semibold'
-                  : 'border-transparent hover:text-[#1E242B]'
+                  ? 'border-[#CE4C6D] text-[#3A2B6D]'
+                  : 'border-transparent hover:text-[#3A2B6D]'
               }`}
             >
               Search Kit
@@ -187,8 +188,8 @@ export default function App() {
               onClick={() => navigateTo('guides')}
               className={`py-1 transition-colors whitespace-nowrap shrink-0 border-b-2 ${
                 view === 'guides'
-                  ? 'border-[#9E3B26] text-[#1E242B] font-semibold'
-                  : 'border-transparent hover:text-[#1E242B]'
+                  ? 'border-[#CE4C6D] text-[#3A2B6D]'
+                  : 'border-transparent hover:text-[#3A2B6D]'
               }`}
             >
               DMV Guides
@@ -200,7 +201,7 @@ export default function App() {
             <button
               type="button"
               onClick={handleResetAll}
-              className="px-4 py-2 rounded-lg border border-[#DCD5C7] bg-[#F7F4EE] text-sm font-semibold text-[#1E242B] hover:bg-[#EFECE4] transition-colors whitespace-nowrap shrink-0"
+              className="px-4 py-2 rounded-lg border border-[#3A2B6D]/30 bg-[#FBF8F4] text-sm font-semibold text-[#3A2B6D] hover:bg-[#EEBC8E]/25 hover:border-[#3A2B6D] transition-colors whitespace-nowrap shrink-0"
             >
               Start Over
             </button>
@@ -210,7 +211,7 @@ export default function App() {
         {/* Simple mobile step links */}
         <nav
           aria-label="Mobile navigation"
-          className="md:hidden border-t border-[#EFECE4] px-6 py-2.5 flex items-center gap-5 overflow-x-auto text-sm font-medium text-[#524E49]"
+          className="md:hidden border-t border-[#E6E0EE] px-6 py-2.5 flex items-center gap-5 overflow-x-auto text-sm font-semibold text-[#3E3757]"
         >
           {(
             [
@@ -226,7 +227,7 @@ export default function App() {
               onClick={() => navigateTo(item.id)}
               className={`whitespace-nowrap shrink-0 py-1 border-b-2 ${
                 view === item.id
-                  ? 'border-[#9E3B26] text-[#1E242B] font-semibold'
+                  ? 'border-[#CE4C6D] text-[#3A2B6D]'
                   : 'border-transparent'
               }`}
             >
@@ -238,12 +239,16 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="flex-1">
-        {loadingHomes && view !== 'survey' && view !== 'guides' ? (
+        {loadingHomes && view !== 'welcome' && view !== 'survey' && view !== 'guides' ? (
           <div className="max-w-3xl mx-auto px-6 py-20 text-center">
-            <p className="text-base text-[#524E49]">Loading DMV home examples...</p>
+            <p className="text-base font-medium text-[#3E3757]">Loading DMV home examples...</p>
           </div>
         ) : (
           <>
+            {view === 'welcome' && (
+              <WelcomeView onBegin={() => navigateTo('survey')} />
+            )}
+
             {view === 'survey' && (
               <SurveyFlow
                 answers={answers}
@@ -297,15 +302,15 @@ export default function App() {
       </main>
 
       {/* Quiet Editorial Footer with Official Sources */}
-      <footer className="border-t border-[#DCD5C7] bg-[#FCFBF8] mt-12">
-        <div className="max-w-6xl mx-auto px-6 py-6 flex flex-wrap items-center justify-between gap-4 text-sm text-[#524E49]">
+      <footer className="border-t border-[#CFC9DB] bg-[#FFFFFF] mt-14">
+        <div className="max-w-6xl mx-auto px-6 py-6 flex flex-wrap items-center justify-between gap-4 text-sm text-[#3E3757]">
           <span>Potomac Folio · Estimates for educational planning only</span>
-          <div className="flex flex-wrap items-center gap-5">
+          <div className="flex flex-wrap items-center gap-5 font-semibold">
             <a
               href="https://www.virginiahousing.com/homebuyers"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-[#1E242B] underline underline-offset-4"
+              className="text-[#3A2B6D] hover:text-[#CE4C6D] underline underline-offset-4"
             >
               Virginia Housing
             </a>
@@ -313,7 +318,7 @@ export default function App() {
               href="https://www.marylandhomeownership.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-[#1E242B] underline underline-offset-4"
+              className="text-[#3A2B6D] hover:text-[#CE4C6D] underline underline-offset-4"
             >
               Maryland Homeownership
             </a>
@@ -321,7 +326,7 @@ export default function App() {
               href="https://www.hud.gov/helping-americans/buying-a-home"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-[#1E242B] underline underline-offset-4"
+              className="text-[#3A2B6D] hover:text-[#CE4C6D] underline underline-offset-4"
             >
               HUD Buying a Home
             </a>

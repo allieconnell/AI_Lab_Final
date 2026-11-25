@@ -609,7 +609,7 @@ export const ArchitecturalPlate: React.FC<ArchitecturalPlateProps> = ({
 }) => {
   return (
     <figure className={`w-full ${className}`}>
-      <div className="relative w-full aspect-[4/3] overflow-hidden rounded-xl border border-[#DCD5C7] bg-[#EFECE4]">
+      <div className="relative w-full aspect-[4/3] overflow-hidden rounded-xl border border-[#CFC9DB] bg-[#F4EDE4]">
         <svg
           viewBox="0 0 800 600"
           className="w-full h-full object-cover block"
@@ -618,20 +618,19 @@ export const ArchitecturalPlate: React.FC<ArchitecturalPlateProps> = ({
         >
           <SharedDefs />
           {renderScene(plateId)}
-          {/* Subtle archival border hairline inside plate */}
           <rect
             x="10"
             y="10"
             width="780"
             height="580"
             fill="none"
-            stroke="#FCFBF8"
+            stroke="#FFFFFF"
             strokeWidth="2"
-            opacity="0.55"
+            opacity="0.5"
           />
         </svg>
       </div>
-      <figcaption className="mt-2.5 text-sm font-serif italic text-[#524E49]">
+      <figcaption className="mt-2.5 text-sm font-medium text-[#3E3757]">
         {subtitle}
       </figcaption>
     </figure>

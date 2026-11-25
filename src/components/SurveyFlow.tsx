@@ -136,50 +136,35 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
 
   return (
     <section className="max-w-3xl mx-auto px-6 py-10 md:py-14">
-      {/* Intro heading on Question 1 */}
-      {step === 1 && (
-        <div className="mb-8">
-          <p className="text-sm font-medium text-[#524E49] mb-2">
-            DC, Maryland &amp; Virginia Homebuying Survey · 10 Quick Questions
-          </p>
-          <h1 className="font-serif text-3xl md:text-4xl font-semibold text-[#1E242B] leading-tight">
-            Find out what your budget buys in the DMV—and what style feels like home.
-          </h1>
-          <p className="mt-3 text-base text-[#524E49] leading-relaxed max-w-2xl">
-            Answer 10 straightforward questions. We will show you realistic DMV homes in your monthly range, match you with Virginia Housing, Maryland, DC, and HUD assistance programs, and build custom Zillow and Redfin searches.
-          </p>
-        </div>
-      )}
-
       {/* Clean Progress Header */}
-      <div className="mb-6">
-        <div className="flex flex-wrap items-center justify-between gap-4 text-sm text-[#524E49] mb-2.5">
-          <span className="font-semibold text-[#1E242B] tabular-nums">
+      <div className="mb-8">
+        <div className="flex flex-wrap items-center justify-between gap-4 text-sm text-[#3E3757] mb-2.5">
+          <span className="font-bold text-[#3A2B6D] tabular-nums">
             Question {step} of {TOTAL_QUESTIONS}
           </span>
-          <span className="tabular-nums">
+          <span className="tabular-nums font-medium">
             Estimated home range:{' '}
-            <strong className="font-mono font-semibold text-[#1E242B]">
+            <strong className="font-mono font-semibold text-[#196F65]">
               {formatCurrency(estimatedRange.minPrice)} – {formatCurrency(estimatedRange.maxPrice)}
             </strong>
           </span>
         </div>
-        <div className="w-full h-2 rounded-full bg-[#EFECE4] overflow-hidden">
+        <div className="w-full h-2.5 rounded-full bg-[#EEBC8E]/40 overflow-hidden">
           <div
-            className="h-full bg-[#9E3B26] transition-all duration-200 ease-out rounded-full"
+            className="h-full bg-[#CE4C6D] transition-all duration-200 ease-out rounded-full"
             style={{ width: `${progressPercent}%` }}
           />
         </div>
       </div>
 
-      {/* Main Single-Column Question Card */}
-      <div className="bg-[#FCFBF8] border border-[#DCD5C7] rounded-2xl p-6 md:p-10">
+      {/* Open Canvas Question Stage */}
+      <div>
         {step === 1 && (
           <div>
-            <h2 className="font-serif text-2xl md:text-3xl font-semibold text-[#1E242B]">
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-[#3A2B6D]">
               1. Which DMV areas are you considering?
             </h2>
-            <p className="mt-2 text-base text-[#524E49]">
+            <p className="mt-2 text-base text-[#3E3757]">
               Select one or more areas. We use this to match local property taxes, assistance programs, and neighborhood options.
             </p>
 
@@ -192,21 +177,21 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
                     type="button"
                     onClick={() => toggleArea(area.id)}
                     aria-pressed={selected}
-                    className={`w-full text-left px-5 py-4 rounded-xl border transition-colors min-h-[60px] flex items-center justify-between gap-4 ${
+                    className={`w-full text-left px-5 py-4 rounded-xl border transition-colors min-h-[64px] flex items-center justify-between gap-4 ${
                       selected
-                        ? 'border-[#9E3B26] bg-[#9E3B26]/[0.06] text-[#1E242B]'
-                        : 'border-[#DCD5C7] bg-[#FCFBF8] hover:border-[#9E3B26]/50 hover:bg-[#F7F4EE]/60'
+                        ? 'border-2 border-[#CE4C6D] bg-[#FFFFFF] text-[#1B1633]'
+                        : 'border-[#CFC9DB] bg-[#FFFFFF] hover:border-[#3A2B6D]'
                     }`}
                   >
                     <div>
-                      <div className="text-base font-semibold text-[#1E242B]">{area.label}</div>
-                      <div className="text-sm text-[#524E49] mt-0.5">{area.examples}</div>
+                      <div className="text-base font-bold text-[#1B1633]">{area.label}</div>
+                      <div className="text-sm text-[#3E3757] mt-0.5">{area.examples}</div>
                     </div>
                     <span
                       className={`w-6 h-6 rounded-md border flex items-center justify-center shrink-0 ${
                         selected
-                          ? 'bg-[#9E3B26] border-[#9E3B26] text-white'
-                          : 'border-[#BDB4A4] bg-white'
+                          ? 'bg-[#CE4C6D] border-[#CE4C6D] text-white'
+                          : 'border-[#8D85A3] bg-white'
                       }`}
                     >
                       {selected && <Check className="w-4 h-4" strokeWidth={2.5} />}
@@ -220,10 +205,10 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
 
         {step === 2 && (
           <div>
-            <h2 className="font-serif text-2xl md:text-3xl font-semibold text-[#1E242B]">
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-[#3A2B6D]">
               2. Are you a first-time homebuyer?
             </h2>
-            <p className="mt-2 text-base text-[#524E49]">
+            <p className="mt-2 text-base text-[#3E3757]">
               HUD, Virginia Housing, and Maryland generally count you as a first-time buyer if you have not owned a primary home in the past 3 years.
             </p>
 
@@ -246,14 +231,14 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
                     key={String(opt.val)}
                     type="button"
                     onClick={() => onUpdateAnswers({ isFirstTimeBuyer: opt.val })}
-                    className={`w-full text-left px-5 py-5 rounded-xl border transition-colors min-h-[72px] ${
+                    className={`w-full text-left px-5 py-5 rounded-xl border transition-colors min-h-[76px] ${
                       selected
-                        ? 'border-[#9E3B26] bg-[#9E3B26]/[0.06]'
-                        : 'border-[#DCD5C7] bg-[#FCFBF8] hover:border-[#9E3B26]/50'
+                        ? 'border-2 border-[#CE4C6D] bg-[#FFFFFF]'
+                        : 'border-[#CFC9DB] bg-[#FFFFFF] hover:border-[#3A2B6D]'
                     }`}
                   >
-                    <div className="text-base font-semibold text-[#1E242B]">{opt.title}</div>
-                    <div className="text-sm text-[#524E49] mt-1">{opt.desc}</div>
+                    <div className="text-base font-bold text-[#1B1633]">{opt.title}</div>
+                    <div className="text-sm text-[#3E3757] mt-1">{opt.desc}</div>
                   </button>
                 );
               })}
@@ -263,19 +248,19 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
 
         {step === 3 && (
           <div>
-            <h2 className="font-serif text-2xl md:text-3xl font-semibold text-[#1E242B]">
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-[#3A2B6D]">
               3. What monthly housing payment feels comfortable?
             </h2>
-            <p className="mt-2 text-base text-[#524E49]">
+            <p className="mt-2 text-base text-[#3E3757]">
               Include mortgage, property taxes, homeowners insurance, and any HOA or condo fee.
             </p>
 
-            <div className="mt-8 p-6 rounded-xl bg-[#F7F4EE] border border-[#DCD5C7]">
+            <div className="mt-6 p-6 md:p-8 rounded-2xl bg-[#FFFFFF] border border-[#CFC9DB]">
               <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <span className="text-base font-medium text-[#524E49]">Target total monthly payment</span>
-                <span className="font-mono text-3xl md:text-4xl font-semibold text-[#1E242B] tabular-nums">
+                <span className="text-base font-semibold text-[#3E3757]">Target total monthly payment</span>
+                <span className="font-mono text-3xl md:text-4xl font-semibold text-[#3A2B6D] tabular-nums">
                   {formatCurrency(answers.monthlyBudget)}
-                  <span className="text-base font-sans font-normal text-[#524E49]"> / month</span>
+                  <span className="text-base font-sans font-medium text-[#3E3757]"> / month</span>
                 </span>
               </div>
 
@@ -290,7 +275,7 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
                   aria-label="Target monthly housing payment"
                   className="w-full folio-slider"
                 />
-                <div className="flex justify-between text-sm font-mono text-[#524E49] mt-2 tabular-nums">
+                <div className="flex justify-between text-sm font-mono font-medium text-[#3E3757] mt-2 tabular-nums">
                   <span>$2,000</span>
                   <span>$3,800</span>
                   <span>$5,600</span>
@@ -305,10 +290,10 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
                       key={preset}
                       type="button"
                       onClick={() => onUpdateAnswers({ monthlyBudget: preset })}
-                      className={`px-4 py-2.5 rounded-lg border text-sm font-mono font-medium transition-colors whitespace-nowrap ${
+                      className={`px-4 py-2.5 rounded-lg border text-sm font-mono font-semibold transition-colors whitespace-nowrap ${
                         active
-                          ? 'bg-[#1E242B] text-white border-[#1E242B]'
-                          : 'bg-[#FCFBF8] text-[#1E242B] border-[#DCD5C7] hover:border-[#1E242B]'
+                          ? 'bg-[#3A2B6D] text-white border-[#3A2B6D]'
+                          : 'bg-[#FBF8F4] text-[#1B1633] border-[#CFC9DB] hover:border-[#3A2B6D]'
                       }`}
                     >
                       {formatCurrency(preset)}/mo
@@ -318,9 +303,9 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
               </div>
             </div>
 
-            <p className="mt-4 text-sm text-[#524E49]">
+            <p className="mt-4 text-sm text-[#3E3757]">
               At {formatCurrency(answers.monthlyBudget)}/month, buyers in the DMV typically look at homes around{' '}
-              <strong className="font-mono text-[#1E242B]">
+              <strong className="font-mono text-[#196F65]">
                 {formatCurrency(estimatedRange.minPrice)} – {formatCurrency(estimatedRange.maxPrice)}
               </strong>{' '}
               depending on county taxes and HOA or co-op fees.
@@ -330,10 +315,10 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
 
         {step === 4 && (
           <div>
-            <h2 className="font-serif text-2xl md:text-3xl font-semibold text-[#1E242B]">
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-[#3A2B6D]">
               4. What is your approximate annual household income?
             </h2>
-            <p className="mt-2 text-base text-[#524E49]">
+            <p className="mt-2 text-base text-[#3E3757]">
               Combined gross income before taxes. State and DC down payment assistance programs use income caps to check eligibility.
             </p>
             <div className="mt-6 grid grid-cols-1 gap-3">
@@ -346,12 +331,12 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
                     onClick={() => onUpdateAnswers({ incomeBand: opt.value })}
                     className={`w-full text-left px-5 py-4 rounded-xl border transition-colors min-h-[64px] ${
                       selected
-                        ? 'border-[#9E3B26] bg-[#9E3B26]/[0.06]'
-                        : 'border-[#DCD5C7] bg-[#FCFBF8] hover:border-[#9E3B26]/50'
+                        ? 'border-2 border-[#CE4C6D] bg-[#FFFFFF]'
+                        : 'border-[#CFC9DB] bg-[#FFFFFF] hover:border-[#3A2B6D]'
                     }`}
                   >
-                    <div className="text-base font-semibold text-[#1E242B]">{opt.label}</div>
-                    <div className="text-sm text-[#524E49] mt-0.5">{opt.hint}</div>
+                    <div className="text-base font-bold text-[#1B1633]">{opt.label}</div>
+                    <div className="text-sm text-[#3E3757] mt-0.5">{opt.hint}</div>
                   </button>
                 );
               })}
@@ -361,10 +346,10 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
 
         {step === 5 && (
           <div>
-            <h2 className="font-serif text-2xl md:text-3xl font-semibold text-[#1E242B]">
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-[#3A2B6D]">
               5. How much do you have saved for upfront costs?
             </h2>
-            <p className="mt-2 text-base text-[#524E49]">
+            <p className="mt-2 text-base text-[#3E3757]">
               Include cash for your down payment and closing costs (typically 2%–4% of the home price in the DMV).
             </p>
             <div className="mt-6 grid grid-cols-1 gap-3">
@@ -377,12 +362,12 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
                     onClick={() => onUpdateAnswers({ savingsBand: opt.value })}
                     className={`w-full text-left px-5 py-4 rounded-xl border transition-colors min-h-[64px] ${
                       selected
-                        ? 'border-[#9E3B26] bg-[#9E3B26]/[0.06]'
-                        : 'border-[#DCD5C7] bg-[#FCFBF8] hover:border-[#9E3B26]/50'
+                        ? 'border-2 border-[#CE4C6D] bg-[#FFFFFF]'
+                        : 'border-[#CFC9DB] bg-[#FFFFFF] hover:border-[#3A2B6D]'
                     }`}
                   >
-                    <div className="text-base font-semibold text-[#1E242B]">{opt.label}</div>
-                    <div className="text-sm text-[#524E49] mt-0.5">{opt.hint}</div>
+                    <div className="text-base font-bold text-[#1B1633]">{opt.label}</div>
+                    <div className="text-sm text-[#3E3757] mt-0.5">{opt.hint}</div>
                   </button>
                 );
               })}
@@ -392,10 +377,10 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
 
         {step === 6 && (
           <div>
-            <h2 className="font-serif text-2xl md:text-3xl font-semibold text-[#1E242B]">
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-[#3A2B6D]">
               6. Which credit score range fits you best?
             </h2>
-            <p className="mt-2 text-base text-[#524E49]">
+            <p className="mt-2 text-base text-[#3E3757]">
               A rough estimate is completely fine—it helps estimate your interest rate and match state assistance rules.
             </p>
             <div className="mt-6 grid grid-cols-1 gap-3">
@@ -408,12 +393,12 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
                     onClick={() => onUpdateAnswers({ creditBand: opt.value })}
                     className={`w-full text-left px-5 py-4 rounded-xl border transition-colors min-h-[64px] ${
                       selected
-                        ? 'border-[#9E3B26] bg-[#9E3B26]/[0.06]'
-                        : 'border-[#DCD5C7] bg-[#FCFBF8] hover:border-[#9E3B26]/50'
+                        ? 'border-2 border-[#CE4C6D] bg-[#FFFFFF]'
+                        : 'border-[#CFC9DB] bg-[#FFFFFF] hover:border-[#3A2B6D]'
                     }`}
                   >
-                    <div className="text-base font-semibold text-[#1E242B] font-mono">{opt.label}</div>
-                    <div className="text-sm text-[#524E49] mt-0.5">{opt.hint}</div>
+                    <div className="text-base font-bold text-[#1B1633] font-mono">{opt.label}</div>
+                    <div className="text-sm text-[#3E3757] mt-0.5">{opt.hint}</div>
                   </button>
                 );
               })}
@@ -423,10 +408,10 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
 
         {step === 7 && (
           <div>
-            <h2 className="font-serif text-2xl md:text-3xl font-semibold text-[#1E242B]">
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-[#3A2B6D]">
               7. How many bedrooms do you need?
             </h2>
-            <p className="mt-2 text-base text-[#524E49]">
+            <p className="mt-2 text-base text-[#3E3757]">
               Think about home office space, roommates, or family plans over the next 3–5 years.
             </p>
             <div className="mt-6 grid grid-cols-2 gap-3.5">
@@ -444,12 +429,12 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
                     onClick={() => onUpdateAnswers({ minBedrooms: opt.beds })}
                     className={`text-left px-5 py-5 rounded-xl border transition-colors min-h-[84px] ${
                       selected
-                        ? 'border-[#9E3B26] bg-[#9E3B26]/[0.06]'
-                        : 'border-[#DCD5C7] bg-[#FCFBF8] hover:border-[#9E3B26]/50'
+                        ? 'border-2 border-[#CE4C6D] bg-[#FFFFFF]'
+                        : 'border-[#CFC9DB] bg-[#FFFFFF] hover:border-[#3A2B6D]'
                     }`}
                   >
-                    <div className="text-lg font-semibold text-[#1E242B]">{opt.label}</div>
-                    <div className="text-sm text-[#524E49] mt-1">{opt.note}</div>
+                    <div className="text-lg font-bold text-[#1B1633]">{opt.label}</div>
+                    <div className="text-sm text-[#3E3757] mt-1">{opt.note}</div>
                   </button>
                 );
               })}
@@ -459,10 +444,10 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
 
         {step === 8 && (
           <div>
-            <h2 className="font-serif text-2xl md:text-3xl font-semibold text-[#1E242B]">
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-[#3A2B6D]">
               8. How do you prefer to get around the DMV?
             </h2>
-            <p className="mt-2 text-base text-[#524E49]">
+            <p className="mt-2 text-base text-[#3E3757]">
               Metro proximity is one of the biggest price trade-offs in DC, Maryland, and Northern Virginia.
             </p>
             <div className="mt-6 grid grid-cols-1 gap-3">
@@ -475,12 +460,12 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
                     onClick={() => onUpdateAnswers({ commuteStyle: opt.value })}
                     className={`w-full text-left px-5 py-4 rounded-xl border transition-colors min-h-[68px] ${
                       selected
-                        ? 'border-[#9E3B26] bg-[#9E3B26]/[0.06]'
-                        : 'border-[#DCD5C7] bg-[#FCFBF8] hover:border-[#9E3B26]/50'
+                        ? 'border-2 border-[#CE4C6D] bg-[#FFFFFF]'
+                        : 'border-[#CFC9DB] bg-[#FFFFFF] hover:border-[#3A2B6D]'
                     }`}
                   >
-                    <div className="text-base font-semibold text-[#1E242B]">{opt.label}</div>
-                    <div className="text-sm text-[#524E49] mt-0.5">{opt.hint}</div>
+                    <div className="text-base font-bold text-[#1B1633]">{opt.label}</div>
+                    <div className="text-sm text-[#3E3757] mt-0.5">{opt.hint}</div>
                   </button>
                 );
               })}
@@ -490,10 +475,10 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
 
         {step === 9 && (
           <div>
-            <h2 className="font-serif text-2xl md:text-3xl font-semibold text-[#1E242B]">
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-[#3A2B6D]">
               9. Which home type feels closest to your lifestyle?
             </h2>
-            <p className="mt-2 text-base text-[#524E49]">
+            <p className="mt-2 text-base text-[#3E3757]">
               You will still get to compare visuals and rate different styles in the next step.
             </p>
             <div className="mt-6 grid grid-cols-1 gap-3">
@@ -506,12 +491,12 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
                     onClick={() => onUpdateAnswers({ structurePreference: opt.value })}
                     className={`w-full text-left px-5 py-4 rounded-xl border transition-colors min-h-[68px] ${
                       selected
-                        ? 'border-[#9E3B26] bg-[#9E3B26]/[0.06]'
-                        : 'border-[#DCD5C7] bg-[#FCFBF8] hover:border-[#9E3B26]/50'
+                        ? 'border-2 border-[#CE4C6D] bg-[#FFFFFF]'
+                        : 'border-[#CFC9DB] bg-[#FFFFFF] hover:border-[#3A2B6D]'
                     }`}
                   >
-                    <div className="text-base font-semibold text-[#1E242B]">{opt.label}</div>
-                    <div className="text-sm text-[#524E49] mt-0.5">{opt.hint}</div>
+                    <div className="text-base font-bold text-[#1B1633]">{opt.label}</div>
+                    <div className="text-sm text-[#3E3757] mt-0.5">{opt.hint}</div>
                   </button>
                 );
               })}
@@ -521,10 +506,10 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
 
         {step === 10 && (
           <div>
-            <h2 className="font-serif text-2xl md:text-3xl font-semibold text-[#1E242B]">
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-[#3A2B6D]">
               10. Pick up to 3 features that matter most to you.
             </h2>
-            <p className="mt-2 text-base text-[#524E49]">
+            <p className="mt-2 text-base text-[#3E3757]">
               Selected {answers.priorities.length} of 3. These help tailor your home deck and Zillow/Redfin keywords.
             </p>
             <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -537,16 +522,16 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
                     type="button"
                     disabled={disabled}
                     onClick={() => togglePriority(opt.value)}
-                    className={`text-left px-5 py-4 rounded-xl border transition-colors min-h-[80px] ${
+                    className={`text-left px-5 py-4 rounded-xl border transition-colors min-h-[82px] ${
                       selected
-                        ? 'border-[#9E3B26] bg-[#9E3B26]/[0.06]'
+                        ? 'border-2 border-[#CE4C6D] bg-[#FFFFFF]'
                         : disabled
-                          ? 'border-[#E6E0D4] bg-[#F7F4EE]/60 opacity-55 cursor-not-allowed'
-                          : 'border-[#DCD5C7] bg-[#FCFBF8] hover:border-[#9E3B26]/50'
+                          ? 'border-[#DFDAE8] bg-[#F4F0F7] opacity-55 cursor-not-allowed'
+                          : 'border-[#CFC9DB] bg-[#FFFFFF] hover:border-[#3A2B6D]'
                     }`}
                   >
-                    <div className="text-base font-semibold text-[#1E242B]">{opt.label}</div>
-                    <div className="text-sm text-[#524E49] mt-1">{opt.hint}</div>
+                    <div className="text-base font-bold text-[#1B1633]">{opt.label}</div>
+                    <div className="text-sm text-[#3E3757] mt-1">{opt.hint}</div>
                   </button>
                 );
               })}
@@ -555,12 +540,12 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
         )}
 
         {/* Clear Bottom Navigation Row */}
-        <div className="mt-8 pt-6 border-t border-[#DCD5C7] flex flex-wrap items-center justify-between gap-4">
+        <div className="mt-10 pt-6 border-t border-[#CFC9DB] flex flex-wrap items-center justify-between gap-4">
           {step > 1 ? (
             <button
               type="button"
               onClick={() => onChangeStep(step - 1)}
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-[#DCD5C7] bg-[#FCFBF8] text-base font-medium text-[#1E242B] hover:bg-[#EFECE4] transition-colors whitespace-nowrap"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-[#3A2B6D]/35 bg-[#FFFFFF] text-base font-semibold text-[#3A2B6D] hover:border-[#3A2B6D] transition-colors whitespace-nowrap"
             >
               <ArrowLeft className="w-4 h-4" />
               Back
@@ -569,7 +554,7 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
             <button
               type="button"
               onClick={onFillSample}
-              className="text-sm font-medium text-[#524E49] underline underline-offset-4 hover:text-[#1E242B] transition-colors py-2"
+              className="text-sm font-semibold text-[#217D8E] underline underline-offset-4 hover:text-[#3A2B6D] transition-colors py-2"
             >
               Try with sample DMV buyer profile
             </button>
@@ -579,10 +564,10 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
             type="button"
             disabled={!isStepComplete()}
             onClick={handleNext}
-            className={`inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-base font-semibold transition-colors whitespace-nowrap ${
+            className={`inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-base font-bold transition-colors whitespace-nowrap ${
               isStepComplete()
-                ? 'bg-[#9E3B26] text-white hover:bg-[#822E1C]'
-                : 'bg-[#DCD5C7] text-[#524E49] cursor-not-allowed'
+                ? 'bg-[#CE4C6D] text-white hover:bg-[#B03656]'
+                : 'bg-[#DCD6E6] text-[#3E3757] cursor-not-allowed'
             }`}
           >
             {step < TOTAL_QUESTIONS ? 'Next Question' : 'Explore Homes in My Range'}
