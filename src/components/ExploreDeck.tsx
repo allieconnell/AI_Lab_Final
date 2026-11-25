@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowRight, ExternalLink, Heart, RotateCcw, X } from 'lucide-react';
+import { ArrowRight, Heart, RotateCcw, X } from 'lucide-react';
 import {
   DownPaymentMode,
   HomeCandidate,
@@ -10,7 +10,6 @@ import {
   buildPreferenceSummary,
   calculateMonthlyPayment,
   formatCurrency,
-  getMatchedPrograms,
   scoreHomeForBuyer,
 } from '../utils/homebuyingEngine';
 import { ArchitecturalPlate } from './ArchitecturalPlate';
@@ -77,10 +76,10 @@ export const ExploreDeck: React.FC<ExploreDeckProps> = ({
           Deck Complete · {likedCount} of {ratings.length} homes liked
         </p>
         <h1 className="font-display text-3xl md:text-4xl font-bold text-[#3A2B6D]">
-          Your DMV home preferences are ready.
+          Your custom homebuyer profile is ready.
         </h1>
         <p className="mt-3 text-base text-[#3E3757] max-w-xl mx-auto">
-          We have translated your survey answers and liked architectural styles into custom Zillow and Redfin search links, keywords, and assistance matches.
+          We have turned your survey answers, priority rankings, and liked homes into a personalized homebuyer profile plus custom Zillow and Redfin search links.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-4">
           <button
@@ -88,7 +87,7 @@ export const ExploreDeck: React.FC<ExploreDeckProps> = ({
             onClick={onFinishToSearchKit}
             className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-[#CE4C6D] text-white text-base font-bold hover:bg-[#B03656] transition-colors whitespace-nowrap"
           >
-            Open My Zillow &amp; Redfin Search Kit
+            See My Profile &amp; Search Kit
             <ArrowRight className="w-4 h-4" />
           </button>
           {ratings.length > 0 && (
@@ -109,8 +108,6 @@ export const ExploreDeck: React.FC<ExploreDeckProps> = ({
   const payment = calculateMonthlyPayment(currentHome, answers, downMode);
   const budgetDiff = payment.totalMonthly - answers.monthlyBudget;
   const isWithinBudget = budgetDiff <= 150;
-
-  const statePrograms = getMatchedPrograms(answers, [currentHome.address.state]).slice(0, 2);
 
   const bathsLabel =
     currentHome.property_details.bathrooms_half > 0
@@ -154,7 +151,7 @@ export const ExploreDeck: React.FC<ExploreDeckProps> = ({
               onClick={onFinishToSearchKit}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#3A2B6D] text-white text-sm font-bold hover:bg-[#2A1E52] transition-colors whitespace-nowrap"
             >
-              Build My Search Kit ({likedCount} liked)
+              See My Profile &amp; Kit ({likedCount} liked)
               <ArrowRight className="w-4 h-4" />
             </button>
           )}
@@ -360,34 +357,6 @@ export const ExploreDeck: React.FC<ExploreDeckProps> = ({
               <strong className="text-[#3A2B6D]">Local buyer note:</strong>{' '}
               {currentHome.financials_and_hoa.first_time_buyer_notes}
             </p>
-          </div>
-
-          {/* Open Editorial Section: Matched Assistance Programs */}
-          <div className="mt-8 pt-6 border-t border-[#CFC9DB]">
-            <h3 className="font-display text-lg font-bold text-[#3A2B6D]">
-              {currentHome.address.state} &amp; HUD Assistance Matches
-            </h3>
-            <div className="mt-4 space-y-5">
-              {statePrograms.map((prog) => (
-                <div key={prog.id} className="pt-4 first:pt-0 border-t first:border-t-0 border-[#E0DAE8]">
-                  <div className="flex flex-wrap items-baseline justify-between gap-2">
-                    <span className="text-base font-bold text-[#1B1633]">{prog.name}</span>
-                    <span className="text-sm font-bold text-[#196F65]">{prog.eligibilityStatus}</span>
-                  </div>
-                  <p className="text-sm font-bold text-[#B03656] mt-1">{prog.benefitHeadline}</p>
-                  <p className="text-sm text-[#3E3757] mt-1">{prog.plainSummary}</p>
-                  <a
-                    href={prog.officialUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 mt-2 text-sm font-bold text-[#217D8E] underline underline-offset-4 hover:text-[#3A2B6D]"
-                  >
-                    Official program details
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
-                </div>
-              ))}
-            </div>
           </div>
 
           {/* Open Editorial Section: What We're Learning */}

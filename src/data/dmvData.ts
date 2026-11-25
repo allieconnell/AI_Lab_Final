@@ -3,11 +3,60 @@ import {
   HomeCandidate,
   PlateStyleId,
   PriorityTag,
+  RankItemId,
   RawDMVListing,
   SurveyAnswers,
 } from '../types/homebuying';
 
 export const DMV_DATASET_URL = '/assets/aistudio/gemini-code-1795620913127_3dd297a2.json';
+
+export interface RankingItemMeta {
+  id: RankItemId;
+  category: 'Location' | 'Home Characteristic' | 'Home Feature';
+  label: string;
+  description: string;
+}
+
+export const RANKING_ITEMS: RankingItemMeta[] = [
+  {
+    id: 'walkable_metro',
+    category: 'Location',
+    label: 'Walkable to Metro & neighborhood spots',
+    description: 'Easy strolls to rail stations, coffee shops, parks, and daily errands.',
+  },
+  {
+    id: 'historic_brick',
+    category: 'Home Characteristic',
+    label: 'Classic brick & architectural charm',
+    description: 'Front porches, hardwood floors, bay windows, and timeless DMV character.',
+  },
+  {
+    id: 'private_yard',
+    category: 'Home Feature',
+    label: 'Private yard, patio, or sunny deck',
+    description: 'Your own outdoor nook for gardening, pets, or weekend coffee.',
+  },
+  {
+    id: 'modern_movein',
+    category: 'Home Characteristic',
+    label: 'Move-in ready modern finishes',
+    description: 'Updated kitchens, newer systems, and fewer weekend repair projects.',
+  },
+  {
+    id: 'low_no_hoa',
+    category: 'Home Characteristic',
+    label: 'Low or zero monthly HOA fees',
+    description: 'Keeping more of your monthly housing budget going toward home equity.',
+  },
+  {
+    id: 'basement_garage',
+    category: 'Home Feature',
+    label: 'Finished basement or garage parking',
+    description: 'Bonus room for guests, a home office, rental offset, or covered parking.',
+  },
+];
+
+export const DEFAULT_PRIORITY_RANKING: RankItemId[] = RANKING_ITEMS.map((item) => item.id);
 
 export const DEFAULT_SURVEY_ANSWERS: SurveyAnswers = {
   areas: [],
@@ -19,7 +68,8 @@ export const DEFAULT_SURVEY_ANSWERS: SurveyAnswers = {
   minBedrooms: null,
   commuteStyle: null,
   structurePreference: null,
-  priorities: [],
+  priorities: ['historic_brick', 'private_yard', 'low_no_hoa'],
+  priorityRanking: DEFAULT_PRIORITY_RANKING,
 };
 
 export interface AreaOption {

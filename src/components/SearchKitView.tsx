@@ -1,15 +1,18 @@
 import React, { useMemo, useState } from 'react';
-import { Check, Copy, ExternalLink, Plus, RotateCcw } from 'lucide-react';
+import { Check, Copy, Download, ExternalLink, Plus, RotateCcw } from 'lucide-react';
 import { DMV_AREA_OPTIONS } from '../data/dmvData';
 import { DMVAreaId, HomeCandidate, HomeRating, SurveyAnswers } from '../types/homebuying';
 import {
+  buildBuyerPersonaProfile,
   buildPortalSearchLinks,
   buildPreferenceSummary,
+  buildReadinessAssessment,
   calculateMonthlyPayment,
   estimatePriceRangeFromSurvey,
   formatCurrency,
   getMatchedPrograms,
 } from '../utils/homebuyingEngine';
+import { downloadBuyerSummaryPdf } from '../utils/pdfSummaryGenerator';
 import { ArchitecturalPlate } from './ArchitecturalPlate';
 
 interface SearchKitViewProps {
@@ -42,6 +45,16 @@ export const SearchKitView: React.FC<SearchKitViewProps> = ({
 }) => {
   const preferenceSummary = useMemo(
     () => buildPreferenceSummary(answers, ratings, homes),
+    [answers, ratings, homes]
+  );
+
+  const buyerProfile = useMemo(
+    () => buildBuyerPersonaProfile(answers, ratings, homes),
+    [answers, ratings, homes]
+  );
+
+  const readinessAssessment = useMemo(
+    () => buildReadinessAssessment(answers, ratings, homes),
     [answers, ratings, homes]
   );
 
@@ -148,6 +161,33 @@ export const SearchKitView: React.FC<SearchKitViewProps> = ({
     }
   };
 
+  const handleDownloadPdf = () => {
+    const homeTypes = [
+      includeDetached ? 'Single-Family House' : null,
+      includeTownhouse ? 'Townhouse / Rowhouse' : null,
+      includeCondo ? 'Condo / Co-op' : null,
+    ].filter((item): item is string => Boolean(item));
+
+    downloadBuyerSummaryPdf({
+      answers,
+      buyerProfile,
+      readiness: readinessAssessment,
+      portalLinks,
+      matchedPrograms,
+      likedHomes,
+      activeFilters: {
+        areaLabel: portalLinks.areaLabel,
+        maxPrice,
+        minBeds,
+        maxHoa,
+        homeTypes,
+        activeKeywords,
+      },
+    });
+    setCopiedBanner('Your personalized profile & readiness PDF has been downloaded!');
+    setTimeout(() => setCopiedBanner(null), 3000);
+  };
+
   const showcaseHomes = likedHomes.length > 0 ? likedHomes : homes.slice(0, 3);
 
   return (
@@ -156,19 +196,33 @@ export const SearchKitView: React.FC<SearchKitViewProps> = ({
       <div className="flex flex-wrap items-end justify-between gap-6 pb-8 border-b border-[#CFC9DB]">
         <div>
           <p className="text-sm font-semibold text-[#196F65] mb-2">
-            Your Personalized DMV Search Kit · {likedHomes.length} liked homes
+            Your Custom Homebuyer Profile &amp; DMV Search Kit · {likedHomes.length} liked homes
           </p>
           <h1 className="font-display text-3xl md:text-4xl font-bold text-[#3A2B6D]">
-            Ready-to-use Zillow &amp; Redfin searches
+            {buyerProfile.archetypeTitle}
           </h1>
-          <p className="mt-2 text-base text-[#3E3757] max-w-2xl">
-            Based on your survey and home ratings, you lean toward{' '}
-            <strong className="text-[#1B1633]">{preferenceSummary.preferredStructureLabel}</strong> with{' '}
-            <strong className="text-[#1B1633]">{preferenceSummary.preferredEraLabel}</strong> appeal. Launch a pre-filtered search below or copy your keywords.
+          <p className="mt-2 text-lg font-medium text-[#B03656]">
+            &ldquo;{buyerProfile.tagline}&rdquo;
           </p>
         </div>
 
         <div className="flex flex-wrap gap-3">
+          <button
+            type="button"
+            onClick={handleDownloadPdf}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#3A2B6D] text-white text-sm font-bold hover:bg-[#2A1E52] transition-colors whitespace-nowrap"
+          >
+            <Download className="w-4 h-4" />
+            Download PDF Summary
+          </button>
+          <button
+            type="button"
+            onClick={() => copyText(buyerProfile.shareableText, 'Your homebuyer profile was copied!')}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[#CE4C6D] bg-[#FFFFFF] text-sm font-bold text-[#B03656] hover:bg-[#CE4C6D] hover:text-white transition-colors whitespace-nowrap"
+          >
+            <Copy className="w-4 h-4" />
+            Copy My Profile
+          </button>
           <button
             type="button"
             onClick={onBackToDeck}
@@ -197,6 +251,38 @@ export const SearchKitView: React.FC<SearchKitViewProps> = ({
           <span>{copiedBanner}</span>
         </div>
       )}
+
+      {/* Personalized Homebuyer Story & Wishlist Snapshot — warm champagne editorial surface */}
+      <div className="mt-8 rounded-2xl bg-[#EEBC8E]/22 p-6 md:p-8">
+        <p className="text-base md:text-lg text-[#1B1633] leading-relaxed max-w-3xl">
+          {buyerProfile.story}
+        </p>
+
+        <p className="mt-4 text-base font-semibold text-[#3A2B6D]">
+          What you&apos;re looking for: <span className="font-normal text-[#1B1633]">{buyerProfile.dreamHomeSnapshot}</span>
+        </p>
+
+        <div className="mt-6 pt-6 border-t border-[#D8B692] grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div>
+            <div className="text-sm font-bold text-[#196F65]">Your #1 Must-Have</div>
+            <div className="mt-1 text-base font-semibold text-[#1B1633]">
+              {buyerProfile.topNonNegotiable}
+            </div>
+          </div>
+          <div>
+            <div className="text-sm font-bold text-[#B03656]">Your Sweet-Spot Vibe</div>
+            <div className="mt-1 text-base font-semibold text-[#1B1633]">
+              {buyerProfile.sweetSpotVibe}
+            </div>
+          </div>
+          <div>
+            <div className="text-sm font-bold text-[#3A2B6D]">Your DMV Superpower</div>
+            <div className="mt-1 text-sm text-[#1B1633] leading-relaxed">
+              {buyerProfile.dmvSuperpower}
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Single Purposeful Primary Action Card: Launch Zillow & Redfin + Copy Keywords */}
       <div className="mt-8 bg-[#FFFFFF] border border-[#CFC9DB] rounded-2xl p-6 md:p-8">

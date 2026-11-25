@@ -44,6 +44,14 @@ export type PriorityTag =
   | 'low_no_hoa'
   | 'garage_parking';
 
+export type RankItemId =
+  | 'walkable_metro'
+  | 'historic_brick'
+  | 'private_yard'
+  | 'modern_movein'
+  | 'low_no_hoa'
+  | 'basement_garage';
+
 export type PlateStyleId =
   | 'dupont_coop'
   | 'petworth_rowhouse'
@@ -69,6 +77,7 @@ export interface SurveyAnswers {
   commuteStyle: CommuteStyle | null;
   structurePreference: StructurePreference | null;
   priorities: PriorityTag[];
+  priorityRanking: RankItemId[];
 }
 
 export interface RawDMVListing {
@@ -182,6 +191,31 @@ export interface PreferenceSummary {
   maxRecommendedHoa: number | null;
   walkabilityPreference: 'High (near Metro)' | 'Balanced' | 'Flexible (driveway/yard)';
   suggestedKeywords: string[];
+}
+
+export interface BuyerPersonaProfile {
+  archetypeTitle: string;
+  tagline: string;
+  story: string;
+  topNonNegotiable: string;
+  sweetSpotVibe: string;
+  dmvSuperpower: string;
+  dreamHomeSnapshot: string;
+  shareableText: string;
+}
+
+export interface ReadinessPillar {
+  label: string;
+  status: 'Strong' | 'On Track' | 'Focus Area';
+  summary: string;
+}
+
+export interface HomebuyingReadinessAssessment {
+  overallTier: 'Pre-Approval Ready' | 'Strong Foundation' | 'Building Momentum';
+  score: number;
+  headline: string;
+  pillars: ReadinessPillar[];
+  nextSteps: string[];
 }
 
 export type AppView = 'welcome' | 'survey' | 'explore' | 'search-kit' | 'guides';

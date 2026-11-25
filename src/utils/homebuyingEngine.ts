@@ -1,15 +1,19 @@
-import { DMV_AREA_OPTIONS } from '../data/dmvData';
+import { DEFAULT_PRIORITY_RANKING, DMV_AREA_OPTIONS, RANKING_ITEMS } from '../data/dmvData';
 import {
   AssistanceProgram,
+  BuyerPersonaProfile,
   CreditBand,
   DMVAreaId,
   DownPaymentMode,
+  HomebuyingReadinessAssessment,
   HomeCandidate,
   HomeRating,
   IncomeBand,
   MonthlyBreakdown,
   PreferenceSummary,
   PriorityTag,
+  RankItemId,
+  ReadinessPillar,
   SavingsBand,
   SurveyAnswers,
 } from '../types/homebuying';
@@ -400,9 +404,39 @@ export function scoreHomeForBuyer(
     reasons.push('Private parking');
   }
 
-  // 6. Priorities overlap
-  const matchingPriorities = home.tags.filter((t) => answers.priorities.includes(t));
-  score += matchingPriorities.length * 7;
+  // 6. Ranked priorities overlap (rank #1 gets highest weight, descending to #6)
+  const ranking: RankItemId[] =
+    answers.priorityRanking && answers.priorityRanking.length > 0
+      ? answers.priorityRanking
+      : DEFAULT_PRIORITY_RANKING;
+
+  ranking.forEach((rankId, index) => {
+    const weight = Math.max(1, 6 - index) * 2.5;
+    let matched = false;
+    if (rankId === 'walkable_metro' && home.location_and_transit.distance_to_metro_miles <= 0.7) {
+      matched = true;
+    } else if (rankId === 'historic_brick' && home.tags.includes('historic_brick')) {
+      matched = true;
+    } else if (rankId === 'private_yard' && home.tags.includes('private_yard')) {
+      matched = true;
+    } else if (rankId === 'modern_movein' && home.tags.includes('modern_movein')) {
+      matched = true;
+    } else if (rankId === 'low_no_hoa' && home.financials_and_hoa.monthly_fee <= 150) {
+      matched = true;
+    } else if (
+      rankId === 'basement_garage' &&
+      (home.tags.includes('basement_income') || home.tags.includes('garage_parking'))
+    ) {
+      matched = true;
+    }
+    if (matched) {
+      score += weight;
+      if (index === 0) {
+        const meta = RANKING_ITEMS.find((item) => item.id === rankId);
+        if (meta) reasons.unshift(`Matches your #1 priority: ${meta.label.split('&')[0].trim()}`);
+      }
+    }
+  });
 
   // 7. Adaptive Taste Learning from Like/Pass history
   if (ratings.length > 0) {
@@ -538,18 +572,26 @@ export function buildPreferenceSummary(
     ])
   ).slice(0, 4);
 
-  // Gather curated, clean Zillow/Redfin search keywords
+  // Gather curated, clean Zillow/Redfin search keywords prioritizing top-ranked items
   const keywordCandidates = new Set<string>();
+  const ranking: RankItemId[] =
+    answers.priorityRanking && answers.priorityRanking.length > 0
+      ? answers.priorityRanking
+      : DEFAULT_PRIORITY_RANKING;
+
+  ranking.slice(0, 3).forEach((rankId) => {
+    if (rankId === 'walkable_metro') keywordCandidates.add('walk to metro');
+    if (rankId === 'historic_brick') keywordCandidates.add('brick');
+    if (rankId === 'private_yard') keywordCandidates.add('fenced yard');
+    if (rankId === 'modern_movein') keywordCandidates.add('updated kitchen');
+    if (rankId === 'low_no_hoa') keywordCandidates.add('no HOA');
+    if (rankId === 'basement_garage') keywordCandidates.add('finished basement');
+  });
+
   likedHomes.forEach((h) => {
     h.searchKeywords.forEach((kw) => keywordCandidates.add(kw));
   });
 
-  if (answers.priorities.includes('low_no_hoa')) keywordCandidates.add('no HOA');
-  if (answers.priorities.includes('private_yard')) keywordCandidates.add('fenced yard');
-  if (answers.priorities.includes('historic_brick')) keywordCandidates.add('brick');
-  if (answers.priorities.includes('basement_income')) keywordCandidates.add('finished basement');
-  if (answers.priorities.includes('garage_parking')) keywordCandidates.add('garage');
-  if (answers.priorities.includes('modern_movein')) keywordCandidates.add('updated kitchen');
   if (answers.commuteStyle === 'metro_walkable') keywordCandidates.add('walk to metro');
 
   const suggestedKeywords = Array.from(keywordCandidates).slice(0, 8);
@@ -564,6 +606,327 @@ export function buildPreferenceSummary(
       suggestedKeywords.length > 0
         ? suggestedKeywords
         : ['brick', 'hardwood', 'walk to metro', 'fenced yard'],
+  };
+}
+
+export function buildBuyerPersonaProfile(
+  answers: SurveyAnswers,
+  ratings: HomeRating[],
+  allHomes: HomeCandidate[]
+): BuyerPersonaProfile {
+  const likedHomes = ratings
+    .filter((r) => r.decision === 'like')
+    .map((r) => allHomes.find((h) => h.listing_id === r.listingId))
+    .filter((h): h is HomeCandidate => Boolean(h));
+
+  const pref = buildPreferenceSummary(answers, ratings, allHomes);
+  const ranking: RankItemId[] =
+    answers.priorityRanking && answers.priorityRanking.length > 0
+      ? answers.priorityRanking
+      : DEFAULT_PRIORITY_RANKING;
+
+  const topRank = ranking[0];
+  const secondRank = ranking[1];
+  const topRankMeta = RANKING_ITEMS.find((r) => r.id === topRank) || RANKING_ITEMS[0];
+  const secondRankMeta = RANKING_ITEMS.find((r) => r.id === secondRank) || RANKING_ITEMS[1];
+
+  const areaLabels = answers.areas
+    .map((id) => DMV_AREA_OPTIONS.find((a) => a.id === id)?.label)
+    .filter((l): l is string => Boolean(l));
+
+  const areaPhrase =
+    areaLabels.length === 0
+      ? 'across DC, Maryland, and Virginia'
+      : areaLabels.length === 1
+        ? `in ${areaLabels[0]}`
+        : `across ${areaLabels.slice(0, 2).join(' and ')}${areaLabels.length > 2 ? ' (and beyond)' : ''}`;
+
+  const likedNeighborhoods = Array.from(new Set(likedHomes.map((h) => h.address.neighborhood))).slice(0, 2);
+  const likedStyles = Array.from(new Set(likedHomes.map((h) => h.property_details.architectural_style))).slice(0, 2);
+
+  // Pick a cute, bespoke DMV homebuyer archetype based on top ranking + structure + liked homes
+  let archetypeTitle = 'The Thoughtful Potomac Nest-Builder';
+  let tagline = 'Balanced, budget-savvy, and ready for a place that truly feels like yours.';
+
+  const lovesCondo =
+    pref.preferredStructureLabel.includes('Condo') || answers.structurePreference === 'condo_coop';
+  const lovesTownhouse =
+    pref.preferredStructureLabel.includes('Townhouse') ||
+    answers.structurePreference === 'townhouse_rowhouse';
+  const lovesDetached =
+    pref.preferredStructureLabel.includes('Detached') ||
+    answers.structurePreference === 'detached_single';
+
+  if (lovesCondo && (topRank === 'walkable_metro' || answers.commuteStyle === 'metro_walkable')) {
+    archetypeTitle = 'The Sunlit Metro Stroller';
+    tagline = 'Big windows, zero lawn-mowing, and your favorite coffee spot just two blocks away.';
+  } else if (lovesTownhouse && (topRank === 'historic_brick' || topRank === 'walkable_metro')) {
+    archetypeTitle = 'The Porch-Front Charm Seeker';
+    tagline = 'Red brick stoops, warm afternoon light, and lively neighborhood streets right outside.';
+  } else if (lovesTownhouse && (topRank === 'basement_garage' || topRank === 'low_no_hoa')) {
+    archetypeTitle = 'The Savvy Rowhouse Strategist';
+    tagline = 'Smart about monthly dues, big on bonus space, and eyeing flexible multi-level living.';
+  } else if (lovesDetached && (topRank === 'private_yard' || topRank === 'low_no_hoa')) {
+    archetypeTitle = 'The Backyard Brunch Host';
+    tagline = 'Sunny fenced yards, zero HOA rules, and plenty of room to spread out and entertain.';
+  } else if (topRank === 'modern_movein') {
+    archetypeTitle = 'The Turnkey Day-One Unpacker';
+    tagline = 'Fresh kitchens, crisp modern lines, and weekends spent exploring—not renovating.';
+  } else if (topRank === 'historic_brick') {
+    archetypeTitle = 'The Brick & Character Collector';
+    tagline = 'Drawn to original hardwood, cozy porches, and DMV homes with a story to tell.';
+  } else if (topRank === 'private_yard') {
+    archetypeTitle = 'The Garden-Patio Daydreamer';
+    tagline = 'Looking for leafy outdoor breathing room without losing your connection to the city.';
+  } else if (topRank === 'walkable_metro') {
+    archetypeTitle = 'The Car-Light Neighborhood Explorer';
+    tagline = 'Front-row access to Metro lines, local markets, and tree-lined evening walks.';
+  }
+
+  const chapterPhrase =
+    answers.isFirstTimeBuyer === false
+      ? 'For your next chapter'
+      : 'As a first-time DMV homebuyer';
+
+  const likedEcho =
+    likedHomes.length > 0
+      ? `The homes you gravitated toward—like ${likedStyles.join(' and ')} options in ${likedNeighborhoods.join(' & ')}—show you have a sharp eye for ${pref.preferredEraLabel.toLowerCase()} appeal.`
+      : `Your survey points straight toward ${pref.preferredStructureLabel.toLowerCase()} with ${pref.preferredEraLabel.toLowerCase()} charm.`;
+
+  const story = `${chapterPhrase} ${areaPhrase}, you put "${topRankMeta.label.toLowerCase()}" at the very top of your list, followed closely by "${secondRankMeta.label.toLowerCase()}." ${likedEcho}`;
+
+  const bedsText = answers.minBedrooms ? `${answers.minBedrooms}+ bedrooms` : 'flexible bedroom space';
+  const dreamHomeSnapshot = `A ${bedsText} ${pref.preferredStructureLabel.toLowerCase().replace(/s$/, '')} ${areaPhrase} around ${formatCurrency(answers.monthlyBudget)}/month, prioritizing ${topRankMeta.label.toLowerCase()}.`;
+
+  const sweetSpotVibe =
+    likedHomes.length > 0
+      ? `${pref.preferredEraLabel} · Favorites included ${likedNeighborhoods.join(', ')}`
+      : `${pref.preferredEraLabel} · ${pref.walkabilityPreference}`;
+
+  let dmvSuperpower =
+    'Knowing your comfortable monthly target upfront lets you compare HOA fees and county taxes like a pro.';
+  if (answers.isFirstTimeBuyer !== false && (answers.creditBand === '680_739' || answers.creditBand === '740_plus')) {
+    dmvSuperpower =
+      'First-time buyer perks + strong credit unlock top assistance tiers across Virginia Housing, Maryland MMP, and DC.';
+  } else if (answers.isFirstTimeBuyer !== false) {
+    dmvSuperpower =
+      'First-time buyer grants, deferred 0% loans, and transfer tax breaks can help keep more cash in your pocket at closing.';
+  } else if (topRank === 'low_no_hoa') {
+    dmvSuperpower =
+      'Focusing on low or zero HOA fees channels more of every monthly payment straight into building your own equity.';
+  }
+
+  const shareableText = [
+    `My Homebuyer Profile (Your Home Buying Adventure): ${archetypeTitle}`,
+    `"${tagline}"`,
+    ``,
+    story,
+    ``,
+    `• #1 Must-Have: ${topRankMeta.label}`,
+    `• Dream Home Snapshot: ${dreamHomeSnapshot}`,
+    `• Sweet-Spot Vibe: ${sweetSpotVibe}`,
+    `• My DMV Superpower: ${dmvSuperpower}`,
+  ].join('\n');
+
+  return {
+    archetypeTitle,
+    tagline,
+    story,
+    topNonNegotiable: `${topRankMeta.label} (${topRankMeta.category})`,
+    sweetSpotVibe,
+    dmvSuperpower,
+    dreamHomeSnapshot,
+    shareableText,
+  };
+}
+
+export function buildReadinessAssessment(
+  answers: SurveyAnswers,
+  ratings: HomeRating[],
+  allHomes: HomeCandidate[]
+): HomebuyingReadinessAssessment {
+  const estimatedRange = estimatePriceRangeFromSurvey(answers);
+  const savingsMid = getSavingsMidpoint(answers.savingsBand);
+  const matchedPrograms = getMatchedPrograms(answers);
+  const likedHomes = ratings
+    .filter((r) => r.decision === 'like')
+    .map((r) => allHomes.find((h) => h.listing_id === r.listingId))
+    .filter((h): h is HomeCandidate => Boolean(h));
+
+  let score = 0;
+  const pillars: ReadinessPillar[] = [];
+
+  // 1. Credit Readiness (up to 30 pts)
+  if (answers.creditBand === '740_plus') {
+    score += 30;
+    pillars.push({
+      label: 'Credit Profile',
+      status: 'Strong',
+      summary:
+        '740+ credit positions you for the most competitive conventional interest rates, lower mortgage insurance, and full access to DMV assistance tiers.',
+    });
+  } else if (answers.creditBand === '680_739') {
+    score += 26;
+    pillars.push({
+      label: 'Credit Profile',
+      status: 'Strong',
+      summary:
+        '680-739 credit meets Virginia Housing Plus extra 1.5% closing cost assistance, Maryland MMP, and DC Open Doors thresholds.',
+    });
+  } else if (answers.creditBand === '640_679') {
+    score += 20;
+    pillars.push({
+      label: 'Credit Profile',
+      status: 'On Track',
+      summary:
+        '640-679 credit meets typical minimums for Maryland MMP, DC Open Doors, and Virginia Housing loans. Raising above 680 can unlock extra closing help.',
+    });
+  } else if (answers.creditBand === '580_639') {
+    score += 13;
+    pillars.push({
+      label: 'Credit Profile',
+      status: 'Focus Area',
+      summary:
+        '580-639 meets HUD/FHA 3.5% down minimums. Connecting with a free HUD-approved housing counselor can help lift your score past 640 for state grants.',
+    });
+  } else {
+    score += 15;
+    pillars.push({
+      label: 'Credit Profile',
+      status: 'On Track',
+      summary:
+        'Check your three-bureau mortgage score early—640+ unlocks most DMV state assistance programs and 680+ improves closing cost options.',
+    });
+  }
+
+  // 2. Down Payment & Closing Buffer (up to 30 pts)
+  const targetDown35 = Math.round(estimatedRange.targetPrice * 0.035);
+  const targetDown5 = Math.round(estimatedRange.targetPrice * 0.05);
+  const estClosing = Math.round(estimatedRange.targetPrice * 0.03);
+  const coverageRatio = savingsMid / Math.max(1, targetDown35 + estClosing);
+
+  if (coverageRatio >= 1.25) {
+    score += 30;
+    pillars.push({
+      label: 'Cash to Close & Reserves',
+      status: 'Strong',
+      summary: `Your savings comfortably cover a 5% down payment (~${formatCurrency(targetDown5)}) plus estimated DMV closing costs (~${formatCurrency(estClosing)}) with emergency cushion.`,
+    });
+  } else if (coverageRatio >= 0.75) {
+    score += 22;
+    pillars.push({
+      label: 'Cash to Close & Reserves',
+      status: 'On Track',
+      summary: `You are close to covering 3.5% down (~${formatCurrency(targetDown35)}) plus closing costs. Pairing your savings with DMV down payment assistance can preserve cash reserves.`,
+    });
+  } else {
+    score += 13;
+    pillars.push({
+      label: 'Cash to Close & Reserves',
+      status: 'Focus Area',
+      summary: `At a ${formatCurrency(estimatedRange.targetPrice)} target price, plan for ~${formatCurrency(targetDown35)} (3.5% down) plus closing costs. DMV grants and 0% deferred second loans can bridge this gap.`,
+    });
+  }
+
+  // 3. Budget & Market Alignment (up to 25 pts)
+  const budgetFittingLikes = likedHomes.filter((h) => {
+    const pay = calculateMonthlyPayment(h, answers, 'my_savings');
+    return pay.totalMonthly <= answers.monthlyBudget + 200;
+  });
+
+  if (likedHomes.length > 0 && budgetFittingLikes.length >= Math.ceil(likedHomes.length * 0.6)) {
+    score += 25;
+    pillars.push({
+      label: 'Budget & Market Fit',
+      status: 'Strong',
+      summary: `${budgetFittingLikes.length} of your ${likedHomes.length} liked DMV homes fit comfortably near your ${formatCurrency(answers.monthlyBudget)}/month target (est. ${formatCurrency(estimatedRange.minPrice)}-${formatCurrency(estimatedRange.maxPrice)} range).`,
+    });
+  } else if (answers.monthlyBudget >= 2400) {
+    score += 19;
+    pillars.push({
+      label: 'Budget & Market Fit',
+      status: 'On Track',
+      summary: `Your ${formatCurrency(answers.monthlyBudget)}/month target supports homes around ${formatCurrency(estimatedRange.minPrice)}-${formatCurrency(estimatedRange.maxPrice)}. Watch monthly condo/HOA fees closely as they directly affect borrowing power.`,
+    });
+  } else {
+    score += 14;
+    pillars.push({
+      label: 'Budget & Market Fit',
+      status: 'Focus Area',
+      summary: `At ${formatCurrency(answers.monthlyBudget)}/month in the DMV, prioritizing low-HOA properties, condo/co-op opportunities, or Maryland/PG County value corridors will stretch your budget furthest.`,
+    });
+  }
+
+  // 4. Search Clarity & Program Leverage (up to 15 pts)
+  const likelyPrograms = matchedPrograms.filter((p) => p.eligibilityStatus === 'Likely Eligible');
+  const hasClarity = answers.areas.length > 0 && likedHomes.length >= 2;
+  if (hasClarity) {
+    score += 15;
+    pillars.push({
+      label: 'Search Clarity & Assistance Fit',
+      status: 'Strong',
+      summary: `Clear area focus, ranked must-haves, and ${likedHomes.length} liked benchmark homes paired with ${likelyPrograms.length} likely-eligible DMV/HUD assistance options.`,
+    });
+  } else {
+    score += 10;
+    pillars.push({
+      label: 'Search Clarity & Assistance Fit',
+      status: 'On Track',
+      summary: `You have ${matchedPrograms.length} DMV/HUD programs mapped to your areas. Exploring a few more sample homes will sharpen your Zillow and Redfin keywords even further.`,
+    });
+  }
+
+  const clampedScore = Math.min(100, Math.max(40, score));
+  let overallTier: HomebuyingReadinessAssessment['overallTier'] = 'Building Momentum';
+  let headline =
+    'You have a clear vision of what you want—focusing on credit, cash-to-close assistance, and lender education will get you pre-approval ready.';
+
+  if (clampedScore >= 82) {
+    overallTier = 'Pre-Approval Ready';
+    headline =
+      'Your credit, cash cushion, and monthly budget are well aligned for the DMV market. You are ready to request participating-lender pre-approvals and tour homes.';
+  } else if (clampedScore >= 65) {
+    overallTier = 'Strong Foundation';
+    headline =
+      'You are in solid shape to prepare for pre-approval. Pairing your budget with matched DMV assistance programs and completing homebuyer education will sharpen your offer.';
+  }
+
+  const nextSteps: string[] = [];
+  if (answers.isFirstTimeBuyer !== false) {
+    nextSteps.push(
+      'Complete a free state-approved or HUD-approved homebuyer education class early—required before closing for Virginia Housing, Maryland MMP, and DC HPAP/Open Doors.'
+    );
+  }
+  if (likelyPrograms.length > 0) {
+    nextSteps.push(
+      `Contact 2-3 participating lenders who offer ${likelyPrograms
+        .slice(0, 2)
+        .map((p) => p.name)
+        .join(' and ')} to compare rates, closing costs, and exact county income limits.`
+    );
+  } else {
+    nextSteps.push(
+      'Request loan estimates from at least 2-3 local DMV lenders (including credit unions) to compare interest rates, lender fees, and PMI options.'
+    );
+  }
+  nextSteps.push(
+    'Gather 2 years of W-2s/tax returns, 30 days of pay stubs, and 2 months of bank statements so you can move quickly when the right home hits the market.'
+  );
+  nextSteps.push(
+    'Save your pre-filtered Zillow and Redfin searches from this summary with instant alerts enabled, and compare total monthly PITI + HOA dues on every listing.'
+  );
+  if (answers.creditBand === '580_639' || answers.creditBand === '640_679') {
+    nextSteps.push(
+      'Keep credit card balances under 30% of limits and avoid opening new credit accounts before closing to boost your mortgage score tier.'
+    );
+  }
+
+  return {
+    overallTier,
+    score: clampedScore,
+    headline,
+    pillars,
+    nextSteps,
   };
 }
 
@@ -651,7 +1014,7 @@ export function buildPortalSearchLinks(params: {
     .join(', ');
 
   const filterChecklistText = [
-    `Potomac Folio — Saved DMV Home Search`,
+    `Your Home Buying Adventure — Saved DMV Home Search`,
     `Area: ${area.label} (${area.examples})`,
     `Price Range: ${formatCurrency(minPrice)} – ${formatCurrency(params.maxPrice)}`,
     `Bedrooms: ${params.minBeds}+ Bedrooms`,

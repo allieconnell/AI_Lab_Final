@@ -13,7 +13,7 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onBegin }) => {
         {/* Left: Very short intro + single "Let's Begin" button */}
         <div className="lg:col-span-5">
           <p className="text-sm font-semibold text-[#196F65] mb-3">
-            DC, Maryland &amp; Virginia Homebuying Guide
+            Your Home Buying Adventure · DC, Maryland &amp; Virginia
           </p>
           <h1 className="font-display text-4xl md:text-5xl font-bold text-[#3A2B6D] leading-tight">
             Find the DMV home that fits your budget and style.

@@ -1,12 +1,13 @@
-import React from 'react';
-import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
-import { DMV_AREA_OPTIONS } from '../data/dmvData';
+import React, { useState } from 'react';
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Check, GripVertical } from 'lucide-react';
+import { DEFAULT_PRIORITY_RANKING, DMV_AREA_OPTIONS, RANKING_ITEMS } from '../data/dmvData';
 import {
   CommuteStyle,
   CreditBand,
   DMVAreaId,
   IncomeBand,
   PriorityTag,
+  RankItemId,
   SavingsBand,
   StructurePreference,
   SurveyAnswers,
@@ -60,15 +61,6 @@ const STRUCTURE_OPTIONS: { value: StructurePreference; label: string; hint: stri
   { value: 'open_exploring', label: 'Open to seeing all types', hint: 'Show me a mix across DC, Maryland, and Virginia to see what clicks.' },
 ];
 
-const PRIORITY_OPTIONS: { value: PriorityTag; label: string; hint: string }[] = [
-  { value: 'historic_brick', label: 'Classic brick & historic charm', hint: 'Rowhouses, front porches, hardwood floors, and timeless character.' },
-  { value: 'private_yard', label: 'Private yard, patio, or deck', hint: 'Outdoor space for relaxing, gardening, or pets.' },
-  { value: 'basement_income', label: 'Finished basement or rental flexibility', hint: 'Extra rec room, home office, or separate English basement entrance.' },
-  { value: 'modern_movein', label: 'Move-in ready modern finishes', hint: 'Newer kitchens, central AC, and fewer near-term repair projects.' },
-  { value: 'low_no_hoa', label: 'Low or zero monthly HOA fees', hint: 'Keep more of your monthly budget going toward home equity.' },
-  { value: 'garage_parking', label: 'Dedicated garage or covered parking', hint: 'Skip street parking hunts with an attached or underground space.' },
-];
-
 export const SurveyFlow: React.FC<SurveyFlowProps> = ({
   answers,
   step,
@@ -77,7 +69,36 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
   onCompleteSurvey,
   onFillSample,
 }) => {
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const estimatedRange = estimatePriceRangeFromSurvey(answers);
+
+  const currentRanking: RankItemId[] =
+    answers.priorityRanking && answers.priorityRanking.length === RANKING_ITEMS.length
+      ? answers.priorityRanking
+      : DEFAULT_PRIORITY_RANKING;
+
+  const syncRanking = (nextRanking: RankItemId[]) => {
+    const derivedPriorities: PriorityTag[] = [];
+    nextRanking.slice(0, 3).forEach((id) => {
+      if (id === 'historic_brick') derivedPriorities.push('historic_brick');
+      if (id === 'private_yard') derivedPriorities.push('private_yard');
+      if (id === 'modern_movein') derivedPriorities.push('modern_movein');
+      if (id === 'low_no_hoa') derivedPriorities.push('low_no_hoa');
+      if (id === 'basement_garage') derivedPriorities.push('basement_income');
+    });
+    onUpdateAnswers({
+      priorityRanking: nextRanking,
+      priorities: derivedPriorities.length > 0 ? derivedPriorities : ['historic_brick'],
+    });
+  };
+
+  const moveRankItem = (fromIndex: number, toIndex: number) => {
+    if (toIndex < 0 || toIndex >= currentRanking.length || fromIndex === toIndex) return;
+    const next = [...currentRanking];
+    const [moved] = next.splice(fromIndex, 1);
+    next.splice(toIndex, 0, moved);
+    syncRanking(next);
+  };
 
   const toggleArea = (areaId: DMVAreaId) => {
     const exists = answers.areas.includes(areaId);
@@ -85,15 +106,6 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
       ? answers.areas.filter((a) => a !== areaId)
       : [...answers.areas, areaId];
     onUpdateAnswers({ areas: nextAreas });
-  };
-
-  const togglePriority = (tag: PriorityTag) => {
-    const exists = answers.priorities.includes(tag);
-    if (exists) {
-      onUpdateAnswers({ priorities: answers.priorities.filter((p) => p !== tag) });
-    } else if (answers.priorities.length < 3) {
-      onUpdateAnswers({ priorities: [...answers.priorities, tag] });
-    }
   };
 
   const isStepComplete = (): boolean => {
@@ -117,7 +129,7 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
       case 9:
         return answers.structurePreference !== null;
       case 10:
-        return answers.priorities.length > 0;
+        return currentRanking.length === RANKING_ITEMS.length;
       default:
         return false;
     }
@@ -507,34 +519,106 @@ export const SurveyFlow: React.FC<SurveyFlowProps> = ({
         {step === 10 && (
           <div>
             <h2 className="font-display text-2xl md:text-3xl font-bold text-[#3A2B6D]">
-              10. Pick up to 3 features that matter most to you.
+              10. Rank what matters most to you in a home.
             </h2>
             <p className="mt-2 text-base text-[#3E3757]">
-              Selected {answers.priorities.length} of 3. These help tailor your home deck and Zillow/Redfin keywords.
+              Order these location, home characteristic, and feature priorities from #1 (most important) to #6 (least important). Drag rows or use the arrows.
             </p>
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {PRIORITY_OPTIONS.map((opt) => {
-                const selected = answers.priorities.includes(opt.value);
-                const disabled = !selected && answers.priorities.length >= 3;
+
+            <div className="mt-5 flex items-center justify-between text-sm font-bold text-[#196F65]">
+              <span>Most important (#1)</span>
+              <span className="text-[#3E3757] font-medium">Drag or tap arrows to reorder</span>
+            </div>
+
+            <ol className="mt-3 space-y-2.5">
+              {currentRanking.map((rankId, index) => {
+                const item = RANKING_ITEMS.find((r) => r.id === rankId);
+                if (!item) return null;
+                const isTop = index === 0;
+                const isDragging = draggedIndex === index;
+
                 return (
-                  <button
-                    key={opt.value}
-                    type="button"
-                    disabled={disabled}
-                    onClick={() => togglePriority(opt.value)}
-                    className={`text-left px-5 py-4 rounded-xl border transition-colors min-h-[82px] ${
-                      selected
-                        ? 'border-2 border-[#CE4C6D] bg-[#FFFFFF]'
-                        : disabled
-                          ? 'border-[#DFDAE8] bg-[#F4F0F7] opacity-55 cursor-not-allowed'
-                          : 'border-[#CFC9DB] bg-[#FFFFFF] hover:border-[#3A2B6D]'
+                  <li
+                    key={item.id}
+                    draggable
+                    onDragStart={() => setDraggedIndex(index)}
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      if (draggedIndex !== null && draggedIndex !== index) {
+                        moveRankItem(draggedIndex, index);
+                        setDraggedIndex(index);
+                      }
+                    }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      setDraggedIndex(null);
+                    }}
+                    onDragEnd={() => setDraggedIndex(null)}
+                    className={`flex items-center gap-3.5 px-4 py-3.5 rounded-xl border bg-[#FFFFFF] transition-colors cursor-grab active:cursor-grabbing ${
+                      isDragging
+                        ? 'border-2 border-[#CE4C6D] opacity-85'
+                        : isTop
+                          ? 'border-2 border-[#CE4C6D]'
+                          : 'border-[#CFC9DB] hover:border-[#3A2B6D]'
                     }`}
                   >
-                    <div className="text-base font-bold text-[#1B1633]">{opt.label}</div>
-                    <div className="text-sm text-[#3E3757] mt-1">{opt.hint}</div>
-                  </button>
+                    <GripVertical className="w-5 h-5 text-[#6F678A] shrink-0" aria-hidden="true" />
+
+                    <span
+                      className={`w-9 h-9 rounded-lg font-mono text-sm font-bold flex items-center justify-center shrink-0 tabular-nums ${
+                        isTop
+                          ? 'bg-[#CE4C6D] text-white'
+                          : index < 3
+                            ? 'bg-[#3A2B6D] text-white'
+                            : 'bg-[#F4EDE4] text-[#3A2B6D]'
+                      }`}
+                    >
+                      #{index + 1}
+                    </span>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-semibold text-[#196F65]">{item.category}</div>
+                      <div className="text-base font-bold text-[#1B1633] leading-snug">
+                        {item.label}
+                      </div>
+                      <div className="text-sm text-[#3E3757] mt-0.5">{item.description}</div>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row items-center gap-1.5 shrink-0">
+                      <button
+                        type="button"
+                        disabled={index === 0}
+                        onClick={() => moveRankItem(index, index - 1)}
+                        aria-label={`Move ${item.label} up`}
+                        className={`w-10 h-10 rounded-lg border flex items-center justify-center transition-colors ${
+                          index === 0
+                            ? 'border-[#E6E0EE] text-[#B5AEC7] cursor-not-allowed'
+                            : 'border-[#CFC9DB] text-[#3A2B6D] hover:border-[#3A2B6D] hover:bg-[#FBF8F4]'
+                        }`}
+                      >
+                        <ArrowUp className="w-4 h-4" />
+                      </button>
+                      <button
+                        type="button"
+                        disabled={index === currentRanking.length - 1}
+                        onClick={() => moveRankItem(index, index + 1)}
+                        aria-label={`Move ${item.label} down`}
+                        className={`w-10 h-10 rounded-lg border flex items-center justify-center transition-colors ${
+                          index === currentRanking.length - 1
+                            ? 'border-[#E6E0EE] text-[#B5AEC7] cursor-not-allowed'
+                            : 'border-[#CFC9DB] text-[#3A2B6D] hover:border-[#3A2B6D] hover:bg-[#FBF8F4]'
+                        }`}
+                      >
+                        <ArrowDown className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </li>
                 );
               })}
+            </ol>
+
+            <div className="mt-2.5 text-sm font-semibold text-[#3E3757]">
+              Least important (#{currentRanking.length})
             </div>
           </div>
         )}

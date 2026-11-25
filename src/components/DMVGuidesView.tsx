@@ -21,7 +21,7 @@ export const DMVGuidesView: React.FC<DMVGuidesViewProps> = ({
           Plain-English DMV Homebuying Guide
         </h1>
         <p className="mt-3 text-base text-[#3E3757] max-w-2xl leading-relaxed">
-          Every affordability estimate and assistance match in Potomac Folio is grounded in official guidance from Virginia Housing, the Maryland Mortgage Program, and the U.S. Department of Housing and Urban Development (HUD).
+          Every affordability estimate and assistance match in Your Home Buying Adventure is grounded in official guidance from Virginia Housing, the Maryland Mortgage Program, and the U.S. Department of Housing and Urban Development (HUD).
         </p>
       </div>
 
